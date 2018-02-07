@@ -7,11 +7,11 @@ import './App.css';
 class App extends Component {
   constructor(props) {
     super();
-    this.state = { searchTerms: [1] };
+    this.state = { searchTerms: [] };
   }
 
   componentDidMount() {
-    fetch("/users")
+     fetch("/users")
       .then(res => res.json())
       .then(returnedSearchTerms => {
         let arr = [];
@@ -23,39 +23,32 @@ class App extends Component {
           this.setState({ searchTerms: arr });
         });
         console.log(arr[0].values);
-      });
+      }); 
   }
 
-  mapObject = function(object, callback) {
-    return Object.keys(object).map(function(key) {
-      return callback(key, object[key]);
-    });
-  };
-  searchTerm = function() {
-   return  this.state.searchTerms.map((searchTerm, i) =>{
-        return <tr key={i}>
-            <td>{searchTerm.key}</td>
-            </tr>
-          });
-  };
-
-  renderEachItem = function(element) {
-    return element.map(item => <li>{item}</li>);
-  };
-
+ 
   render() {
     return <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to React</h1>
         </header>
-        <div>
-          <table>
-            <tbody>
-              {this.searchTerm()} {this.renderEachItem(this.state.searchTerms['mental'].values)}
-            </tbody>
-          </table>
-        </div>
+        <table className="table w-100 mx-auto ">
+          <tbody>
+            {this.state.searchTerms.map(searchTerm => <tr>
+                <td className="text-left p-0">
+                <span className="ml-2"><strong>{searchTerm.key}</strong> ({searchTerm.values.length})</span>
+                  <ul className="list-group my-0">
+                    {searchTerm.values.map(item => (
+                      <li className="text-left py-0 list-group-item">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </td>
+              </tr>)}
+          </tbody>
+        </table>
       </div>;
   }
 }
