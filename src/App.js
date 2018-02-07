@@ -12,18 +12,18 @@ class App extends Component {
 
   componentDidMount() {
      fetch("/users")
-      .then(res => res.json())
-      .then(returnedSearchTerms => {
-        let arr = [];
-        Object.keys(returnedSearchTerms).forEach(key => {
-          let obj = {};
-          obj.key = key;
-          obj.values = returnedSearchTerms[key];
-          arr.push(obj);
-          this.setState({ searchTerms: arr });
-        });
-        console.log(arr[0].values);
-      }); 
+       .then(res => res.json())
+       .then(returnedSearchTerms => {
+         let arr = [];
+         Object.keys(returnedSearchTerms).forEach(key => {
+           let obj = {};
+           obj.key = key;
+           obj.values = returnedSearchTerms[key];
+           arr.push(obj);
+           this.setState({ searchTerms: arr });
+         });
+        /*  console.log(arr[0].values); */
+       }); 
   }
 
  
@@ -35,12 +35,12 @@ class App extends Component {
         </header>
         <table className="table w-100 mx-auto ">
           <tbody>
-            {this.state.searchTerms.map(searchTerm => <tr>
-                <td className="text-left p-0">
+            {this.state.searchTerms.map((searchTerm,i) => <tr key={i}>
+                <td  className="text-left p-0">
                 <span className="ml-2"><strong>{searchTerm.key}</strong> ({searchTerm.values.length})</span>
                   <ul className="list-group my-0">
-                    {searchTerm.values.map(item => (
-                      <li className="text-left py-0 list-group-item">
+                    {searchTerm.values.map((item,i) => (
+                      <li key={i} className="text-left py-0 list-group-item">
                         {item}
                       </li>
                     ))}
