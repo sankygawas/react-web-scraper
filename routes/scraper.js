@@ -2,10 +2,11 @@ var express = require('express');
 var router = express.Router();
 var request = require("request");
 var cheerio = require("cheerio");
+var translate = require("translate-api");
 
 var webPages = [
-  "https://mohfw.gov.in/documents/policy",
-  "https://mohfw.gov.in/documents/policy"
+   "https://mohfw.gov.in/documents/policy"
+ /*   "http://www.ms.ro/noutati/" */
 ];
 
 let searchTerms = [
@@ -34,14 +35,23 @@ function iterateDOM(node,returnArray) {
       //check if element has any text in it
       if(element.data){
           let text = element.data;
-          
-          //search all the required terms in this element
           searchTerms.forEach(searchTerm=>{
-                //if the element text includes required searchItem push to the array
-                if (text.trim().toLowerCase().includes(searchTerm)) 
-                  returnArray[searchTerm] = buildSearchTermArray(searchTerm, element, returnArray);
-          })
-           
+                        //if the element text includes required searchItem push to the array
+                        if (text.trim().toLowerCase().includes(searchTerm)) 
+                          returnArray[searchTerm] = buildSearchTermArray(searchTerm, element, returnArray);
+           })
+           /* let transText = text;
+           translate.getText(transText, { to: "en" })
+             .then(function(text) {
+                  console.log(text);
+                  //search all the required terms in this element
+                  
+             })
+             .catch(function(err){
+                  console.log(err);
+             }); 
+          
+  */          
       }
       //else loop through its child elemet
      else if(element.children)
@@ -77,7 +87,7 @@ function runScraper(i, returnA,callback) {
 
     //make request to webPage and retrieve html asynchronous
     request(webPages[i], function(error, response, html) {
-      if (error) console.log("error: " + err);
+      if (error) console.log("error: " + error);
       else {
         console.log("Status Code:", response.statusCode);
         var obj = scrapeDataForPage(html);
@@ -114,6 +124,10 @@ router.get('/', function(req, res, next) {
      callBack.then(function(result){
        console.log('Returbn array is');
        console.log(result);
+       let transUrl = "http://www.ms.ro/noutati/";
+       translate.getPage(transUrl).then(function(htmlStr) {
+         console.log(htmlStr);
+       });
       res.send(JSON.stringify(result));
     },function(err){
       console.log(err);
