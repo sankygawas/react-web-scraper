@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import KeyWord from "./KeyWord";
 
 /* const API = "https://allorigins.me/get?method=raw&url="; */
 
@@ -11,7 +12,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-     fetch("/users")
+     fetch("/scraper")
        .then(res => res.json())
        .then(returnedSearchTerms => {
          let arr = [];
@@ -31,22 +32,14 @@ class App extends Component {
     return <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 className="App-title">Web Scraper</h1>
         </header>
+
         <table className="table w-100 mx-auto ">
           <tbody>
-            {this.state.searchTerms.map((searchTerm,i) => <tr key={i}>
-                <td  className="text-left p-0">
-                <span className="ml-2"><strong>{searchTerm.key}</strong> ({searchTerm.values.length})</span>
-                  <ul className="list-group my-0">
-                    {searchTerm.values.map((item,i) => (
-                      <li key={i} className="text-left py-0 list-group-item">
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </td>
-              </tr>)}
+            {this.state.searchTerms.map((searchTerm,i) => 
+              <KeyWord keyWord={searchTerm} index={i}/>
+            )}
           </tbody>
         </table>
       </div>;
