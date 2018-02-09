@@ -38,7 +38,7 @@ class App extends Component {
         <table className="table w-100 mx-auto ">
           <tbody>
             {this.state.searchTerms.map((searchTerm,i) => 
-              <KeyWord keyWord={searchTerm} index={i}/>
+              <KeyWord key={i} keyWord={searchTerm}/>
             )}
           </tbody>
         </table>

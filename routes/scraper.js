@@ -14,22 +14,23 @@ let searchTerms = [
   "medical imaging",
   "diagnostic",
   "medical technologies",
-  "ovidius"
+  "ovidius",
+  "health"
 ];
 
 function scrapeDataForPage(html) {
 
       var $ = cheerio.load(html, { normalizeWhitespace: true });
       let body = $("body");
-      let returnArray = {};
-      iterateDOM(body["0"], returnArray);
+      let returnObject = {};
+      iterateDOM(body["0"], returnObject);
 
-  return returnArray;
+  return returnObject;
 }
 
 
  
-function iterateDOM(node,returnArray) {
+function iterateDOM(node,returnObject) {
     //loop through each node
     node.children.forEach(element => {
       //check if element has any text in it
@@ -38,7 +39,7 @@ function iterateDOM(node,returnArray) {
           searchTerms.forEach(searchTerm=>{
                         //if the element text includes required searchItem push to the array
                         if (text.trim().toLowerCase().includes(searchTerm)) 
-                          returnArray[searchTerm] = buildSearchTermArray(searchTerm, element, returnArray);
+                          returnObject[searchTerm] = buildSearchTermArray(searchTerm, element, returnObject);
            })
            /* let transText = text;
            translate.getText(transText, { to: "en" })
@@ -55,33 +56,33 @@ function iterateDOM(node,returnArray) {
       }
       //else loop through its child elemet
      else if(element.children)
-        iterateDOM(element, returnArray);
+        iterateDOM(element, returnObject);
     }); 
    
 }
 
 /*Build Search Object*/
-function buildSearchTermArray(term, element, returnArray) {
+function buildSearchTermArray(term, element, returnObject) {
  let termArray = [];
- if (returnArray[term])
-    termArray = returnArray[term];
+ if (returnObject[term])
+    termArray = returnObject[term];
  termArray.push(element.data.trim());
   return termArray;
 }
 
 //Merge SearchTerms for multiple pages, to retain only single object.
-function mergeObjectValues(obj, returnA) {
+function mergeObjectValues(obj, returnObject) {
   for (var property in obj) {
-    if (returnA[property]) {
+    if (returnObject[property]) {
       obj[property].forEach(item => {
-        returnA[property].push(item);
+        returnObject[property].push(item);
       });
-    } else returnA[property] = obj[property];
+    } else returnObject[property] = obj[property];
   }
 }
 
 //loop through given webpages. Used recursion as async request gets called inside the loop
-function runScraper(i, returnA,callback) {
+function runScraper(i, returnObject,callback) {
 
   if (i < webPages.length) {
 
@@ -91,25 +92,23 @@ function runScraper(i, returnA,callback) {
       else {
         console.log("Status Code:", response.statusCode);
         var obj = scrapeDataForPage(html);
-        mergeObjectValues(obj, returnA);
-        console.log(returnA);
-        runScraper(i + 1, returnA, callback);
+        mergeObjectValues(obj, returnObject);
+        console.log(returnObject);
+        runScraper(i + 1, returnObject, callback);
       }
     });
   }
   else
-    callback(returnA);
+    callback(returnObject);
 
 }
  function scrapeData(){
   return new Promise(function(resolve, reject) {
     // Do async job
-    let returnA = {};
+    let returnObject = {};
 
-     runScraper(0, returnA, function(returnA) {
-        console.log("returnA is");
-       console.log(returnA);
-       resolve(returnA);
+     runScraper(0, returnObject, function(returnObject) {
+       resolve(returnObject);
      });
      
   });
@@ -122,12 +121,6 @@ router.get('/', function(req, res, next) {
 
   let callBack = scrapeData();
      callBack.then(function(result){
-       console.log('Returbn array is');
-       console.log(result);
-       let transUrl = "http://www.ms.ro/noutati/";
-       translate.getPage(transUrl).then(function(htmlStr) {
-         console.log(htmlStr);
-       });
       res.send(JSON.stringify(result));
     },function(err){
       console.log(err);
