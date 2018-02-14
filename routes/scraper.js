@@ -119,8 +119,9 @@ function runScraper(i, returnObject,callback) {
 
 
 /* scrape data */
-router.get('/', function(req, res, next) {
-
+router.post('/', function(req, res, next) {
+console.log(req.body.tags);
+searchTerms = req.body.tags;
   let callBack = scrapeData();
      callBack.then(function(result){
       let json = JSON.stringify(result);

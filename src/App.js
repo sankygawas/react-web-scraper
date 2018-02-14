@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import KeyWord from "./KeyWord";
-
-/* const API = "https://allorigins.me/get?method=raw&url="; */
 
 class App extends Component {
   constructor(props) {
@@ -12,7 +9,25 @@ class App extends Component {
   }
 
   componentDidMount() {
-     fetch("/scraper")
+   
+  }
+
+fetchData = function(){
+      let tagString = document.getElementById("tags").value;
+      if (tagString == null || tagString === "") {
+        alert("Please fill out he tags field");
+        return;
+      }
+      let tags = tagString.split(",");
+      this.setState({ searchTerms: [] });
+      console.log(tags)
+      fetch("/scraper", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json"
+            },
+            body: JSON.stringify({ tags: tags })
+       })
        .then(res => res.json())
        .then(returnedSearchTerms => {
          let arr = [];
@@ -23,23 +38,20 @@ class App extends Component {
            arr.push(obj);
            this.setState({ searchTerms: arr });
          });
-        /*  console.log(arr[0].values); */
+      
        }); 
-  }
-
+}
  
   render() {
     return <div className="App">
         <header className="App-header">
           <h1 className="App-title">Node-React Web Scraper</h1>
         </header>
-      Keywords Searched
-      <ul className="list-group my-0">
-      {this.state.searchTerms.map((searchTerm,i) => 
-               <li>{searchTerm.key}</li>
-            )}
-       
-      </ul>
+         <div className="mt-2">
+            <input type="text"  id="tags" aria-describedby="emailHelp" placeholder="Enter CSV Tags" required/>
+            <button className="btn-primary" onClick={this.fetchData.bind(this)}>Fetch</button>
+            <small id="emailHelp" className="form-text text-muted">Please insert your search tags in CSV format</small> 
+         </div>
         <table className="table w-100 mx-auto ">
           <tbody>
             {this.state.searchTerms.map((searchTerm,i) => 

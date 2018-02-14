@@ -9,7 +9,7 @@ const KeyWord = props => (
       </span>
       <ul className="list-group my-0">
         {props.keyWord.values.map((item, i) => (
-          <SearchTerm key={i} item={item} />
+          <SearchTerm key={i} item={item} index={i} />
         ))}
       </ul>
     </td>

@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+ 
 }
 
 .App-logo {
@@ -28,4 +29,24 @@
 
 .keyword{
   background-color: #e9eff9;
+}
+
+input{
+  padding:5px;
+  margin:10;
+  width:35%;
+  border-radius:5px;
+  border:1px solid #eee;
+}
+
+button{
+  background-color: #245fa2;
+  color:#fff;
+  border:1px solid #245fa2;
+  border-radius:5px;
+  box-shadow:none;
+  min-width:100px;
+  margin-left:10px;
+  padding:5px;
+  cursor:pointer;
 }
