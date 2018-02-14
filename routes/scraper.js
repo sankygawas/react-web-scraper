@@ -3,6 +3,8 @@ var router = express.Router();
 var request = require("request");
 var cheerio = require("cheerio");
 var translate = require("translate-api");
+var fs = require("fs");
+
 
 var webPages = [
    "https://mohfw.gov.in/documents/policy"
@@ -121,7 +123,10 @@ router.get('/', function(req, res, next) {
 
   let callBack = scrapeData();
      callBack.then(function(result){
-      res.send(JSON.stringify(result));
+      let json = JSON.stringify(result);
+      //writing the output to json
+      fs.writeFile("output.json", json, "utf8");
+      res.send(json);
     },function(err){
       console.log(err);
     }); 
