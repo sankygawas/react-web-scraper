@@ -31,10 +31,15 @@ class App extends Component {
   render() {
     return <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Web Scraper</h1>
+          <h1 className="App-title">Node-React Web Scraper</h1>
         </header>
-
+      Keywords Searched
+      <ul className="list-group my-0">
+      {this.state.searchTerms.map((searchTerm,i) => 
+               <li>{searchTerm.key}</li>
+            )}
+       
+      </ul>
         <table className="table w-100 mx-auto ">
           <tbody>
             {this.state.searchTerms.map((searchTerm,i) => 

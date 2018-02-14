@@ -3,7 +3,7 @@ import SearchTerm from "./SearchTerm";
 
 const KeyWord = props => (
   <tr >
-    <td className="text-left p-0">
+    <td className="text-left p-0 keyword">
       <span className="ml-2">
         <strong>{props.keyWord.key}</strong> ({props.keyWord.values.length})
       </span>
