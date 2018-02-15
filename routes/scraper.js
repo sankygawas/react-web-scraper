@@ -7,8 +7,8 @@ var fs = require("fs");
 
 
 var webPages = [
-   "https://mohfw.gov.in/documents/policy"
- /*   "http://www.ms.ro/noutati/" */
+   "https://mohfw.gov.in/documents/policy",
+   "http://www.ema.europa.eu/ema/" 
 ];
 
 let searchTerms = [

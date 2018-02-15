@@ -5,7 +5,7 @@ import KeyWord from "./KeyWord";
 class App extends Component {
   constructor(props) {
     super();
-    this.state = { searchTerms: [] };
+    this.state = { searchTerms: [] ,tags:[]};
   }
 
   componentDidMount() {
@@ -22,7 +22,7 @@ fetchData = function(){
       }
       //removing empty fields
       let tags = tagString.split(",").filter(v=>v.trim()!=='');
-      this.setState({ searchTerms: [] });
+      this.setState({ searchTerms: []});
       console.log(tags);
 
       //load screen
@@ -47,7 +47,10 @@ fetchData = function(){
            arr.push(obj);
            this.setState({ searchTerms: arr });
          });
-      
+
+       //setting tags badges  
+       this.setState({ tags: tags });
+       document.getElementById("tags").value = tagString;
        }); 
 }
  
@@ -65,8 +68,9 @@ fetchData = function(){
                     
     }
 
+    //search field
     const Input = ()=>{
-      return <div className="mt-2">
+      return <div className="mt-2 mb-2">
                 <input type="text"  id="tags" placeholder="Enter CSV Tags" required/>
                 <button className="btn-primary" onClick={this.fetchData.bind(this)}>Fetch</button>
                 <small className="form-text text-muted">Please insert your search tags in CSV format</small> 
@@ -77,15 +81,20 @@ fetchData = function(){
         <header className="App-header">
           <h1 className="App-title">Node-React Web Scraper</h1>
         </header>
-         <Input/>
-         <div className="showbox" id="loading" style={loadStyle} >
+        <Input />
+
+        {this.state.tags.map((tag, i) => (
+          <span key={i}  className="badge badge-pill badge-info mx-1 p-2">{tag}</span>
+        ))}
+        
+        <div className="showbox" id="loading" style={loadStyle}>
           <Loader />
-         </div>
-        <table className="table w-100 mx-auto ">
+        </div>
+        <table className="table w-100 mx-auto mt-2">
           <tbody>
-            {this.state.searchTerms.map((searchTerm,i) => 
-              <KeyWord key={i} keyWord={searchTerm}/>
-            )}
+            {this.state.searchTerms.map((searchTerm, i) => (
+              <KeyWord key={i} keyWord={searchTerm} />
+            ))}
           </tbody>
         </table>
       </div>;
