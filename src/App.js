@@ -55,23 +55,32 @@ fetchData = function(){
     var loadStyle = {
       display:'none'
     };
+
+    const Loader = ()=>{ 
+          return <div className="loader">
+                          <svg className="circular" viewBox="25 25 50 50">
+                            <circle className="path" cx="50" cy="50" r="20" fill="none" strokeWidth="2" strokeMiterlimit="10"/>
+                          </svg>
+                 </div>
+                    
+    }
+
+    const Input = ()=>{
+      return <div className="mt-2">
+                <input type="text"  id="tags" placeholder="Enter CSV Tags" required/>
+                <button className="btn-primary" onClick={this.fetchData.bind(this)}>Fetch</button>
+                <small className="form-text text-muted">Please insert your search tags in CSV format</small> 
+            </div>
+    }
     
     return <div className="App">
         <header className="App-header">
           <h1 className="App-title">Node-React Web Scraper</h1>
         </header>
-         <div className="mt-2">
-            <input type="text"  id="tags" placeholder="Enter CSV Tags" required/>
-            <button className="btn-primary" onClick={this.fetchData.bind(this)}>Fetch</button>
-            <small className="form-text text-muted">Please insert your search tags in CSV format</small> 
+         <Input/>
+         <div className="showbox" id="loading" style={loadStyle} >
+          <Loader />
          </div>
-         <div className="showbox" id="loading" style={loadStyle}>
-          <div className="loader">
-            <svg className="circular" viewBox="25 25 50 50">
-              <circle className="path" cx="50" cy="50" r="20" fill="none" strokeWidth="2" strokeMiterlimit="10"/>
-            </svg>
-          </div>
-        </div>
         <table className="table w-100 mx-auto ">
           <tbody>
             {this.state.searchTerms.map((searchTerm,i) => 
