@@ -31,7 +31,7 @@ function scrapeDataForPage(html) {
 }
 
 
- 
+ //recursively loop through the children of body element
 function iterateDOM(node,returnObject) {
     //loop through each node
     node.children.forEach(element => {
@@ -43,18 +43,7 @@ function iterateDOM(node,returnObject) {
                         if (text.trim().toLowerCase().includes(searchTerm)) 
                           returnObject[searchTerm] = buildSearchTermArray(searchTerm, element, returnObject);
            })
-           /* let transText = text;
-           translate.getText(transText, { to: "en" })
-             .then(function(text) {
-                  console.log(text);
-                  //search all the required terms in this element
-                  
-             })
-             .catch(function(err){
-                  console.log(err);
-             }); 
           
-  */          
       }
       //else loop through its child elemet
      else if(element.children)
@@ -119,18 +108,19 @@ function runScraper(i, returnObject,callback) {
 
 
 /* scrape data */
+//returns object as {"health":["term1","term2","term3"] 
 router.post('/', function(req, res, next) {
-console.log(req.body.tags);
-searchTerms = req.body.tags;
-  let callBack = scrapeData();
-     callBack.then(function(result){
-      let json = JSON.stringify(result);
-      //writing the output to json
-      fs.writeFile("output.json", json, "utf8");
-      res.send(json);
-    },function(err){
-      console.log(err);
-    }); 
+    console.log(req.body.tags);
+    searchTerms = req.body.tags;
+    let callBack = scrapeData();
+    callBack.then(function(result){
+        let json = JSON.stringify(result);
+        //writing the output to json
+        fs.writeFile("output.json", json, "utf8");
+        res.send(json);
+      },function(err){
+        console.log(err);
+      }); 
 
    
 });

@@ -27,7 +27,8 @@ fetchData = function(){
 
       //load screen
       document.getElementById("loading").style.display="block";
-
+      let start = new Date().getSeconds()
+      
       //fetch data from api
       fetch("/scraper", {
             method: "POST",
@@ -51,6 +52,8 @@ fetchData = function(){
        //setting tags badges  
        this.setState({ tags: tags });
        document.getElementById("tags").value = tagString;
+       let end = new Date().getSeconds();
+       console.log(end - start - end);
        }); 
 }
  
