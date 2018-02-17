@@ -6,28 +6,16 @@ var translate = require("translate-api");
 var fs = require("fs");
 
 
-var webPages = [
-   "https://mohfw.gov.in/documents/policy",
-   "http://www.ema.europa.eu/ema/" 
-];
+    let webPages = ["https://mohfw.gov.in/documents/policy", "https://mohfw.gov.in/documents/policy", "http://www.ema.europa.eu/ema/"];
 
-let searchTerms = [
-  "mental health",
-  "medical imaging",
-  "diagnostic",
-  "medical technologies",
-  "ovidius",
-  "health"
-];
+let searchTerms = [];
 
-function scrapeDataForPage(html) {
-
-      var $ = cheerio.load(html, { normalizeWhitespace: true });
-      let body = $("body");
-      let returnObject = {};
-      iterateDOM(body["0"], returnObject);
-
-  return returnObject;
+function scrapeDataForPage(html, returnObject) {
+  var $ = cheerio.load(html, { normalizeWhitespace: true });
+  let body = $("body");
+  //let returnObject = {};
+  iterateDOM(body["0"], returnObject);
+  //return returnObject;
 }
 
 
@@ -43,18 +31,7 @@ function iterateDOM(node,returnObject) {
                         if (text.trim().toLowerCase().includes(searchTerm)) 
                           returnObject[searchTerm] = buildSearchTermArray(searchTerm, element, returnObject);
            })
-           /* let transText = text;
-           translate.getText(transText, { to: "en" })
-             .then(function(text) {
-                  console.log(text);
-                  //search all the required terms in this element
-                  
-             })
-             .catch(function(err){
-                  console.log(err);
-             }); 
-          
-  */          
+
       }
       //else loop through its child elemet
      else if(element.children)
@@ -84,47 +61,47 @@ function mergeObjectValues(obj, returnObject) {
 }
 
 //loop through given webpages. Used recursion as async request gets called inside the loop
-function runScraper(i, returnObject,callback) {
-
-  if (i < webPages.length) {
-
-    //make request to webPage and retrieve html asynchronous
-    request(webPages[i], function(error, response, html) {
-      if (error) console.log("error: " + error);
-      else {
-        console.log("Status Code:", response.statusCode);
-        var obj = scrapeDataForPage(html);
-        mergeObjectValues(obj, returnObject);
-        console.log(returnObject);
-        runScraper(i + 1, returnObject, callback);
-      }
-    });
-  }
-  else
-    callback(returnObject);
+function requestPage(webPage, resolve, reject) {
+  
+        request(webPage.page, function(error, response, html) {
+          if (error) console.log("error: " + error);
+          else {
+            console.log("Status Code:", response.statusCode);
+           scrapeDataForPage(html, webPage.data);
+           // mergeObjectValues(obj, webPage.data);
+            webPage.data["link"] = webPage.page;
+            resolve(webPage.data);
+          }
+        });
 
 }
- function scrapeData(){
-  return new Promise(function(resolve, reject) {
-    // Do async job
-    let returnObject = {};
 
-     runScraper(0, returnObject, function(returnObject) {
-       resolve(returnObject);
-     });
-     
-  });
+function scrapeData(){
+ // Create an array of promises
+     var promises = [];
+     for (var i = 0; i < webPages.length; i++) {
+           // Fill the array with promises which initiate some async work
+           promises.push(new Promise(function(resolve, reject) {
+               requestPage({ page: webPages[i], data: {} }, function(object) {
+                   console.log(object);
+                   resolve(object);
+                 }, reject);
+             }));
+     }
+  
+  // Return a Promise.all promise of the array
+  return Promise.all(promises);
  
 } 
 
-
 /* scrape data */
 router.post('/', function(req, res, next) {
-console.log(req.body.tags);
 searchTerms = req.body.tags;
   let callBack = scrapeData();
-     callBack.then(function(result){
-      let json = JSON.stringify(result);
+     callBack.then(function(results){
+       // console.log(results);
+      let json = JSON.stringify(results);
+    
       //writing the output to json
       fs.writeFile("output.json", json, "utf8");
       res.send(json);

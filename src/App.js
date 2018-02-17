@@ -28,30 +28,44 @@ fetchData = function(){
       //load screen
       document.getElementById("loading").style.display="block";
 
-      //fetch data from api
-      fetch("/scraper", {
-            method: "POST",
-            headers: {
-              "content-type": "application/json"
-            },
-            body: JSON.stringify({ tags: tags })
-       })
-       .then(res => res.json())
-       .then(returnedSearchTerms => {
-         let arr = [];
-         document.getElementById("loading").style.display="none";
-         Object.keys(returnedSearchTerms).forEach(key => {
-           let obj = {};
-           obj.key = key;
-           obj.values = returnedSearchTerms[key];
-           arr.push(obj);
-           this.setState({ searchTerms: arr });
-         });
 
-       //setting tags badges  
-       this.setState({ tags: tags });
-       document.getElementById("tags").value = tagString;
-       }); 
+     console.log(new Date());
+            //fetch data from api
+        fetch("/scraper", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json"
+          },
+          body: JSON.stringify({ tags: tags})
+        })
+        .then(res => res.json())
+        .then(returnedSearchTerms => {
+          let arr = [];
+          document.getElementById("loading").style.display = "none";
+          console.log(returnedSearchTerms);
+          console.log(new Date());
+           this.setState({ searchTerms: returnedSearchTerms });
+        /*   Object.keys(returnedSearchTerms).forEach(key => {
+            let obj = {};
+            obj.key = key;
+            obj.values = returnedSearchTerms[key];
+            arr.push(obj);
+          });
+          console.log("before")
+          console.log(arr);
+          this.state.searchTerms.forEach(term=>{
+            arr.push(term);
+          })
+           console.log("after");
+          console.log(arr);
+          //arr.push(this.state.searchTerms);
+          this.setState({ searchTerms: arr });
+          //setting tags badges
+          this.setState({ tags: tags });
+          document.getElementById("tags").value = tagString; */
+        }); 
+ 
+
 }
  
   render() {
@@ -84,17 +98,27 @@ fetchData = function(){
         <Input />
 
         {this.state.tags.map((tag, i) => (
-          <span key={i}  className="badge badge-pill badge-info mx-1 p-2">{tag}</span>
+          <span key={i} className="badge badge-pill badge-info mx-1 p-2">
+            {tag}
+          </span>
         ))}
-        
+
         <div className="showbox" id="loading" style={loadStyle}>
           <Loader />
         </div>
         <table className="table w-100 mx-auto mt-2">
           <tbody>
-            {this.state.searchTerms.map((searchTerm, i) => (
-              <KeyWord key={i} keyWord={searchTerm} />
-            ))}
+            {this.state.searchTerms.map((searchTermObject, i) =>
+              /*     {/* <KeyWord key={i} keyWord={searchTermObject} /> } */
+              /*   Object.keys(searchTermObject).forEach(key => {
+              let obj = {};
+              obj.key = key;
+              obj.values = searchTermObject[key];
+              arr.push(obj);
+            }); */
+           // console.log(searchTermObject["link"] )
+            <tr><td>  { searchTermObject["link"] }</td></tr>
+            )}
           </tbody>
         </table>
       </div>;
