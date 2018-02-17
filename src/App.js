@@ -53,7 +53,7 @@ fetchData = function(){
        this.setState({ tags: tags });
        document.getElementById("tags").value = tagString;
        let end = new Date().getSeconds();
-       console.log(end - start - end);
+       console.log(end - start);
        }); 
 }
  
