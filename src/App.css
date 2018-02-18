@@ -99,6 +99,9 @@ button{
   stroke-linecap: round;
 }
 
+.text-primary{
+  color:#245fa2 !important;
+}
 @-webkit-keyframes rotate {
   100% {
     -webkit-transform: rotate(360deg);

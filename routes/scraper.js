@@ -6,7 +6,8 @@ var translate = require("translate-api");
 var fs = require("fs");
 
 
-    let webPages = ["https://mohfw.gov.in/documents/policy", "https://mohfw.gov.in/documents/policy", "http://www.ema.europa.eu/ema/"];
+    let webPages = ["https://mohfw.gov.in/documents/policy", "http://www.ema.europa.eu/ema/", "http://www.who.int/hospitals/en/",
+  "https://mohfw.gov.in/documents/policy", "http://www.ema.europa.eu/ema/", "http://www.who.int/hospitals/en/"];
 
 let searchTerms = [];
 
