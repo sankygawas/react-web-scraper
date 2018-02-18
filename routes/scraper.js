@@ -9,17 +9,13 @@ var fs = require("fs");
 var webPages = [
   "https://mohfw.gov.in/documents/policy",
   "https://mohfw.gov.in/documents/policy",
-  "http://www.ema.europa.eu/ema/"
+  "http://www.who.int/hospitals/en/",
+  "https://mohfw.gov.in/documents/policy",
+  "https://mohfw.gov.in/documents/policy",
+  "http://www.who.int/hospitals/en/"
 ];
 
-let searchTerms = [
-  "mental health",
-  "medical imaging",
-  "diagnostic",
-  "medical technologies",
-  "ovidius",
-  "health"
-];
+let searchTerms = [];
 
 function scrapeDataForPage(html) {
 

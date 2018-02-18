@@ -5,14 +5,9 @@ import KeyWord from "./KeyWord";
 class App extends Component {
   constructor(props) {
     super();
-    this.state = { searchTerms: [] ,tags:[]};
+    this.state = { searchTerms: [] ,tags:[],time:0};
   }
 
-  componentDidMount() {
-   
-  }
-
- 
 fetchData = function(){
 
       let tagString = document.getElementById("tags").value;
@@ -27,7 +22,7 @@ fetchData = function(){
 
       //load screen
       document.getElementById("loading").style.display="block";
-      let start = new Date().getSeconds()
+      let start = new Date();
       
       //fetch data from api
       fetch("/scraper", {
@@ -50,10 +45,10 @@ fetchData = function(){
          });
 
        //setting tags badges  
-       this.setState({ tags: tags });
        document.getElementById("tags").value = tagString;
-       let end = new Date().getSeconds();
-       console.log(end - start);
+        let end = new Date();
+        let time = (end.getTime() - start.getTime()) / 1000;
+         this.setState({ tags: tags, time: time });
        }); 
 }
  
@@ -79,7 +74,11 @@ fetchData = function(){
                 <small className="form-text text-muted">Please insert your search tags in CSV format</small> 
             </div>
     }
-    
+
+     let timeComponenet;
+     if(this.state.time!== 0)
+        timeComponenet = <p class="lead my-1"><span>Fetched in {this.state.time} seconds</span></p>
+
     return <div className="App">
         <header className="App-header">
           <h1 className="App-title">Node-React Web Scraper</h1>
@@ -89,7 +88,7 @@ fetchData = function(){
         {this.state.tags.map((tag, i) => (
           <span key={i}  className="badge badge-pill badge-info mx-1 p-2">{tag}</span>
         ))}
-        
+        {timeComponenet}
         <div className="showbox" id="loading" style={loadStyle}>
           <Loader />
         </div>
